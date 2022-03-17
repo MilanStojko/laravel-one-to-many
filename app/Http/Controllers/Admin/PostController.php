@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Post;
+use App\Category;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -12,7 +13,8 @@ class PostController extends Controller
 
     protected $validation = [
         'title'=>'required|max:50',
-        'content'=>'required'
+        'content'=>'required',
+        'category_id'=>'nullable|exists:categories,id'
     ];
 
     protected function slug($title = "", $id = ""){
@@ -43,8 +45,9 @@ class PostController extends Controller
     public function create()
     {
         {
+            $categories = Category::all();
             $post = Post::all();
-            return view('admin.posts.create', compact('post'));
+            return view('admin.posts.create', compact(['post', 'categories']));
         }
     }
 
@@ -60,19 +63,8 @@ class PostController extends Controller
 
         $form_data = $request->all();
 
-        // $slugTmp = Str::slug($form_data['title']);
-
-        //check slug existing
-        // $count = 1;
-        // while(Post::where('slug', $slugTmp)->first()){
-        //     $slugTmp = Str::slug($form_data['title'])."-".$count;
-        //     $count ++;
-        // }
         $form_data['slug']=$this->slug($form_data["title"]);
         
-
-        //slug existing 
-        //$form_data['slug'] = $slugTmp;
         $newPost = new Post();
 
         $newPost->fill($form_data);
@@ -100,7 +92,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('admin.posts.edit', compact('post'));
+        $categories = Category::all();
+        return view('admin.posts.edit', compact(['post', 'categories']));
     }
 
     /**

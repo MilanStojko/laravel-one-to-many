@@ -17,6 +17,17 @@
             <textarea class="form-control" id="content" name="content"
                 placeholder="Inserisci la descrizione del prodotto"></textarea>
         </div>
+        <div class="form-group">
+            <label for="category_id">Categoria</label>
+            <select name="category_id">
+                <option value="">-----</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}">
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
         <button type="submit" class="btn btn-primary">Crea</button>
     </form>
 
